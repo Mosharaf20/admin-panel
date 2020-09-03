@@ -37,7 +37,7 @@
                             <tbody>
                             <tr v-for="user  in users.data" :key="user.id" >
                                 <th scope="row">{{user.id}}</th>
-                                <td><router-link to="/profile">{{user.name | capitalize}}</router-link></td>
+                                <td><router-link to="/profiles">{{user.name | capitalize}}</router-link></td>
                                 <td>{{user.email}}</td>
                                 <td>{{user.type | capitalize}}</td>
                                 <td>{{user.created_at | myDate}}</td>

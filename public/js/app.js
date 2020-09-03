@@ -71085,7 +71085,7 @@ var render = function() {
                       _c(
                         "td",
                         [
-                          _c("router-link", { attrs: { to: "/profile" } }, [
+                          _c("router-link", { attrs: { to: "/profiles" } }, [
                             _vm._v(_vm._s(_vm._f("capitalize")(user.name)))
                           ])
                         ],
