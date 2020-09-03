@@ -7,6 +7,11 @@ import VueRouter from 'vue-router'
 Vue.use(VueRouter);
 
 
+//import gate
+import Gate from "./Gate";
+Vue.prototype.$gate = new Gate(window.user);
+
+
 //v-form
 import Vue from 'vue'
 import { Form, HasError, AlertError } from 'vform'
@@ -55,6 +60,22 @@ const options = {
 
 Vue.use(VueProgressBar, options);
 
+//passport component
+Vue.component(
+    'passport-clients',
+    require('./components/passport/Clients.vue').default
+);
+
+Vue.component(
+    'passport-authorized-clients',
+    require('./components/passport/AuthorizedClients.vue').default
+);
+
+Vue.component(
+    'passport-personal-access-tokens',
+    require('./components/passport/PersonalAccessTokens.vue').default
+);
+
 
 //custom fire event
 window.Fire = new  Vue();
@@ -63,6 +84,8 @@ window.Fire = new  Vue();
 //moment js
 import moment from 'moment';
 
+//vue pagination
+Vue.component('pagination', require('laravel-vue-pagination'));
 
 //filter
 Vue.filter('myDate',function(created){
@@ -77,15 +100,19 @@ Vue.filter('capitalize',function (value) {
 
 const routes = [
     { path: '/dashboard', component: require('./components/DashboardComponent.vue').default},
-    { path: '/user', component: require('./components/UsersComponent.vue').default},
+    { path: '/users', component: require('./components/UsersComponent.vue').default},
     { path: '/profile', component: require('./components/ProfileComponent.vue').default},
     { path: '/developer', component: require('./components/DeveloperComponent.vue').default},
+    { path: '/gallery', component: require('./components/GalleryComponent.vue').default},
+    { path: '/form', component: require('./components/FormComponent.vue').default},
+    { path: '*', component: require('./components/ComponentPageNotFound.vue').default},
 ];
 
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+Vue.component('notification-component', require('./components/NotificationComponent.vue').default);
 
 const router = new VueRouter({
     mode: 'history',
@@ -95,4 +122,15 @@ const router = new VueRouter({
 const app = new Vue({
     router,
     el: '#app',
+
+    data:{
+        keyword: '',
+    },
+
+    methods:{
+        searchContent: _.debounce(()=>{
+            Fire.$emit('searching')
+        },1500),
+
+    }
 });

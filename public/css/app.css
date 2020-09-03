@@ -31219,6 +31219,14 @@ a.text-muted:hover {
   color: #ffffff;
 }@charset "UTF-8";
 
+.router-link-active {
+  background: #ff881a;
+}
+
+.sidebar a {
+  color: white !important;
+}
+
 /*!
  * Bootstrap v4.5.2 (https://getbootstrap.com/)
  * Copyright 2011-2020 The Bootstrap Authors
@@ -31228,7 +31236,7 @@ a.text-muted:hover {
 
 :root {
   --blue: #3490dc;
-  --indigo: #6574cd;
+  --indigo: #00b6cd;
   --purple: #9561e2;
   --pink: #f66d9b;
   --red: #e3342f;

@@ -33,7 +33,7 @@
         <!-- SEARCH FORM -->
         <form class="form-inline ml-3">
             <div class="input-group input-group-sm">
-                <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
+                <input @keyup="searchContent" v-model="keyword" class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
                 <div class="input-group-append">
                     <button class="btn btn-navbar" type="submit">
                         <i class="fas fa-search"></i>
@@ -44,33 +44,6 @@
 
         <!-- Right navbar links -->
         <ul class="navbar-nav ml-auto">
-            <!-- Messages Dropdown Menu -->
-            <li class="nav-item dropdown">
-                <a class="nav-link" data-toggle="dropdown" href="#">
-                    <i class="fas fa-comments h4"></i>
-                    <span class="badge badge-danger navbar-badge">3</span>
-                </a>
-                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" style="width: 350px">
-                    <a href="#" class="dropdown-item">
-                        <!-- Message Start -->
-                        <div class="media">
-                            <img src="{{asset('/images/admin/logo.png')}}" alt="User Avatar" class="img-size-50 mr-3 img-circle">
-                            <div class="media-body">
-                                <h3 class="dropdown-item-title">
-                                    Brad Diesel
-                                    <span class="float-right text-sm text-danger"><i class="fas fa-star"></i></span>
-                                </h3>
-                                <p class="text-sm">Call me whenever you can...</p>
-                                <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
-                            </div>
-                        </div>
-                        <!-- Message End -->
-                    </a>
-                    <div class="dropdown-divider"></div>
-
-                    <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
-                </div>
-            </li>
             <!-- Notifications Dropdown Menu -->
             <li class="nav-item dropdown">
                 <a class="nav-link" data-toggle="dropdown" href="#">
@@ -80,10 +53,15 @@
                 <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" style="width: 300px">
                     <span class="dropdown-item dropdown-header">15 Notifications</span>
                     <div class="dropdown-divider"></div>
-                    <a href="#" class="dropdown-item">
-                        <i class="fas fa-envelope mr-2"></i> 4 new messages
-                        <span class="float-right text-muted text-sm">3 mins</span>
-                    </a>
+                    <notification-component :notify="{{$count}}"></notification-component>
+
+                   {{-- @foreach(auth()->user()->notifications as $notify)
+                        <a href="#" class="dropdown-item">
+                            <i class="fas fa-envelope mr-2"></i> {{$notify->data['message'] }}
+                            <span class="float-right text-muted text-sm">{{$notify->created_at->format('h:i A')}}</span>
+                        </a>
+                    @endforeach--}}
+
                     <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
                 </div>
             </li>
@@ -98,7 +76,7 @@
             <img src="{{asset('images/admin/profile.png')}}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
                  style="opacity: .8">
             <span class="brand-text font-weight-light d-block">
-                Mosharaf Hosen
+                {{Auth::user()->name}}
             </span>
             <span class="text-success h6">Admin</span>
         </a>
@@ -128,7 +106,7 @@
                         </a>
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
-                                <router-link  to="/user" class="nav-link">
+                                <router-link  to="/users" class="nav-link">
                                     <i class="nav-icon fas fa-users"></i>
                                     <p>Users</p>
                                 </router-link >
@@ -136,12 +114,14 @@
                         </ul>
                     </li>
 
-                    <li class="nav-item">
-                        <router-link to="/developer" class="nav-link">
-                            <i class="nav-icon fas fa-users-cog"></i>
-                            <p>Developer </p>
-                        </router-link>
-                    </li>
+                    @can('isAdmin')
+                        <li class="nav-item">
+                            <router-link to="/developer" class="nav-link">
+                                <i class="nav-icon fas fa-users-cog"></i>
+                                <p>Developer </p>
+                            </router-link>
+                        </li>
+                   @endcan
 
                     <li class="nav-item">
                         <router-link to="/profile" class="nav-link">
@@ -149,6 +129,22 @@
                             <p>Profile </p>
                         </router-link>
                     </li>
+
+
+                    <li class="nav-item">
+                        <router-link to="/gallery" class="nav-link">
+                            <i class="nav-icon fas fa-user"></i>
+                            <p>Gallery </p>
+                        </router-link>
+                    </li>
+
+                    <li class="nav-item">
+                        <router-link to="/form" class="nav-link">
+                            <i class="nav-icon fas fa-user"></i>
+                            <p>From </p>
+                        </router-link>
+                    </li>
+
 
                     <li class="nav-item">
                         <a href="{{route('admin.logout')}}" class="nav-link">
@@ -184,6 +180,11 @@
 
 </div>
 
+@auth()
+    <script>
+        window.user =@json(auth()->user());
+    </script>
+@endauth
 
 <script src="{{ asset('js/app.js') }}" defer></script>
 

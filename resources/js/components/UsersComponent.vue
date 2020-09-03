@@ -20,7 +20,7 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between">
                         <h3 class="font-weight-bolder">Users List</h3>
-                        <button class="btn btn-success ml-auto  btn-sm" @click="addUserModel">Add User<i class="ml-2 fas fa-plus-square"></i></button>
+                        <button v-if="$gate.isAdminOrSUbAdmin()"  class="btn btn-success ml-auto  btn-sm" @click="addUserModel">Add User<i class="ml-2 fas fa-plus-square"></i></button>
                     </div>
                     <div class="card-body">
                         <table class="table table-striped">
@@ -35,19 +35,22 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr v-for="user in users">
+                            <tr v-for="user  in users.data" :key="user.id" >
                                 <th scope="row">{{user.id}}</th>
-                                <td>{{user.name | capitalize}}</td>
+                                <td><router-link to="/profile">{{user.name | capitalize}}</router-link></td>
                                 <td>{{user.email}}</td>
                                 <td>{{user.type | capitalize}}</td>
                                 <td>{{user.created_at | myDate}}</td>
                                 <td>
-                                    <a href="javascript:" @click="updateUserModel(user)"><i class="fas fa-edit"></i></a>
-                                    <a href="javascript:" @click.prevent="deleteUser"><i class="text-danger fas fa-trash"></i></a>
+                                    <a href="javascript:" v-if="$gate.isAdminOrSUbAdmin()" @click="updateUserModel(user)"><i class="fas fa-edit"></i></a>
+                                    <a href="javascript:" v-if="$gate.isAdmin()" @click.prevent="deleteUser"><i class="text-danger fas fa-trash"></i></a>
                                 </td>
                             </tr>
                             </tbody>
                         </table>
+
+                        <br>
+                        <pagination :data="users" @pagination-change-page="getResults"></pagination>
                     </div>
                 </div>
 
@@ -100,7 +103,9 @@
                                 <has-error :form="form" field="password"></has-error>
                             </div>
 
-                            <button :disabled="form.busy" type="submit" class="btn btn-success">Add User</button>
+                            <button v-show="show"  :disabled="form.busy" type="submit" class="btn btn-success">Add User</button>
+                            <button v-show="!show"  :disabled="form.busy" type="submit" class="btn btn-success">Update User</button>
+
                         </form>
                     </div>
                 </div>
@@ -125,7 +130,7 @@
                     remember: true
                 }),
 
-                users:null,
+                users:{},
 
                 'show':true
             }
@@ -133,14 +138,23 @@
 
         methods:{
 
+            getResults(page = 1) {
+                axios.get('api/users?page=' + page)
+                    .then(response => {
+                        this.users = response.data;
+                    });
+            },
+
             allUser()
             {
-                axios.get('api/users').then(response=>{
+                axios.get('api/users')
+                    .then(response=>{
                     this.users = response.data;
                 }).catch(error=>{
 
                 })
             },
+
 
 
             addUserModel()
@@ -198,19 +212,22 @@
 
                this.form.patch('api/users/'+this.form.id)
                    .then(response=>{
+                       if(response.data === 'success'){
+                           Fire.$emit('loadUsers');
 
-                       Fire.$emit('loadUsers');
+                           $('#addUser').modal('hide');
 
-                       $('#addUser').modal('hide');
+                           this.form.reset();
 
-                       this.form.reset();
+                           Toast.fire({
+                               icon: 'success',
+                               title: 'User is Updated successfully'
+                           });
 
-                       Toast.fire({
-                           icon: 'success',
-                           title: 'User is Updated successfully'
-                       });
-
-                       console.log(response.data)
+                           console.log(response.data)
+                       }else{
+                           alert('Your are not authorized person')
+                       }
 
                    })
                    .catch(error=>{
@@ -259,8 +276,22 @@
         mounted() {
             this.allUser();
 
+            this.getResults();
+
             Fire.$on('loadUsers',()=>{
                 this.allUser();
+            });
+
+            Fire.$on('searching',()=>{
+                const query = this.$parent.keyword;
+                axios.post('api/users/search?q='+query)
+                    .then(response=>{
+                        this.users = response.data;
+                        console.log(response.data)
+                    })
+                    .catch(error=>{
+                        console.log(error)
+                    })
             })
         }
     }

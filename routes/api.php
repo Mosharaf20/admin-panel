@@ -19,6 +19,15 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::get('/users', 'UserController@index')->name('users.index');
+Route::get('/all-users', 'UserController@allUser')->name('all-user.index');
 Route::post('/users', 'UserController@store')->name('users.store');
 Route::delete('/users/{user}', 'UserController@destroy')->name('users.destroy');
 Route::patch('/users/{user}', 'UserController@update')->name('users.update');
+Route::post('users/search', 'UserController@search')->name('users.search');
+Route::get('/users/notification/', 'UserController@notification')->name('users.notification');
+
+Route::get('/profiles','ProfileController@index')->name('profiles.index');
+Route::post('/profiles/image','ProfileController@profileImage')->name('profiles.image');
+Route::post('/profiles/{user}','ProfileController@store')->name('profiles.store');
+
+Route::post('/profiles','ProfileController@profile');

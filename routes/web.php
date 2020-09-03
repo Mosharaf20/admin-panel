@@ -21,4 +21,4 @@ Auth::routes();
 
 Route::get("/admin/logout",'UserController@logout')->name('admin.logout');
 
-Route::get('{path}','UserController@admin')->where( 'path', '([A-z\d\-\/_.]+)' );
+Route::get('{path}','HomeController@index')->where( 'path', '([A-z\d\-\/_.]+)');
