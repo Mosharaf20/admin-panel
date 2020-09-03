@@ -31,3 +31,7 @@ Route::post('/profiles/image','ProfileController@profileImage')->name('profiles.
 Route::post('/profiles/{user}','ProfileController@store')->name('profiles.store');
 
 Route::post('/profiles','ProfileController@profile');
+
+Route::post('/images','GalleryController@store');
+Route::get('/images','GalleryController@index');
+Route::delete('/images/{gallery}','GalleryController@destroy');

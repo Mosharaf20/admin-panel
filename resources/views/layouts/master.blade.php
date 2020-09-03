@@ -124,7 +124,7 @@
                    @endcan
 
                     <li class="nav-item">
-                        <router-link to="/profile" class="nav-link">
+                        <router-link to="/profiles" class="nav-link">
                             <i class="nav-icon fas fa-user"></i>
                             <p>Profile </p>
                         </router-link>
@@ -132,7 +132,7 @@
 
 
                     <li class="nav-item">
-                        <router-link to="/gallery" class="nav-link">
+                        <router-link to="/test" class="nav-link">
                             <i class="nav-icon fas fa-user"></i>
                             <p>Gallery </p>
                         </router-link>

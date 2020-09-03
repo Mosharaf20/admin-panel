@@ -98,12 +98,17 @@ Vue.filter('capitalize',function (value) {
     return value.charAt(0).toUpperCase() + value.slice(1)
 });
 
+
+//DropZone
+import dropzone from 'dropzone';
+window.Dropzone = dropzone;
+
 const routes = [
     { path: '/dashboard', component: require('./components/DashboardComponent.vue').default},
     { path: '/users', component: require('./components/UsersComponent.vue').default},
-    { path: '/profile', component: require('./components/ProfileComponent.vue').default},
+    { path: '/profiles', component: require('./components/ProfileComponent.vue').default},
     { path: '/developer', component: require('./components/DeveloperComponent.vue').default},
-    { path: '/gallery', component: require('./components/GalleryComponent.vue').default},
+    { path: '/test', component: require('./components/GalleryComponent.vue').default},
     { path: '/form', component: require('./components/FormComponent.vue').default},
     { path: '*', component: require('./components/ComponentPageNotFound.vue').default},
 ];
